@@ -1,4 +1,4 @@
-// Bamazon
+// Bamazon Customer
 // by Dave Bokil
 // Rutgers Coding Bootcamp Week 12 Assignment
 // =================================================================
@@ -51,7 +51,7 @@ var start = function() {
         inquirer.prompt([{
                 type: 'input',
                 name: 'idPick',
-                message: 'Enter the ID of the product you would like to purchase'
+                message: "\n" + "Welcome to bamazon!" + "\n" + "Check out our latest products above!" + "\n" + "Enter the ID of the product you would like to purchase:"
             }, {
                 type: 'input',
                 name: 'quantity',
@@ -87,17 +87,27 @@ var start = function() {
                             }, {
                               item_id: userItem.item_id
                             }], function(error) {
-                              if (error) throw error;
+                              if (error) throw error;               
                               // show the customer the total cost of their purchase.
                               console.log("\n" + "Your total is $" + (userItem.price * userNumberItems))
-                              console.log("\n"  +'Congratulations on your purchase. Your item(s) are being processed. Please come back soon!' + "\n"  + "Redirecting to the storefront:")
-                            start();
+                              console.log("\n"  +'Congratulations on your purchase. Your item(s) are being processed. Please come back soon!' + "\n")
+                            connection.end();
                             });        
 
                         // If user does not confirm purchase, send them back to the storefront.    
                         } else {
-                            console.log("\n"  + "Looks like you changed your mind. Re-directing to the storefront:" + "\n")
-                            start()
+                            inquirer.prompt([{
+                                name: "nextAction",
+                                type: "confirm",
+                                message: "Looks like you changed your mind. Would you like to return to the storefront?"
+                            }]).then(function(answer) {
+                                if (answer.nextAction === true) {
+                                    start()
+                                } else {
+                                    console.log("Quitting Application. Goodbye.")
+                                    connection.end();
+                                }
+                            })
                         }
                     })
                 }
